@@ -160,3 +160,30 @@ def KWGD(F, X, h, eps, hk, T):
                 
             Xf[i] = Xf[i] - eps * (gradient(F, Xf[i], h) + num / (hk * den))
     return Xf
+
+
+#################################### Stochastic Wasserstin Gradient Descent ####################################
+# defining the algorithm
+def SWGD(X, F, T, eps, h, hk):
+    """
+    input : 
+    - X : initialization
+    - F : target potential
+    - T : the total number of iterations
+    - eps : epsilon: learning rate
+    - h : for the gradient of F
+    - hk : la fenêtre du kernel: paramètre très important !
+    
+    return :
+    Xf : the final configuration of points
+    """
+    Xf = X.copy()
+    N = len(X)
+    for t in range(T):
+        for i in range(N):
+            j = np.random.randint(N)
+            num = gr_gauss_kernel(Xf[i], Xf[j], 1)
+            den = hk * gauss_kernel(Xf[i], Xf[j], 1)
+            Xf[i] = Xf[i] - eps * (gradient(F, Xf[i], h) +  (num / den))
+            
+    return Xf
