@@ -34,7 +34,7 @@ def SVGD_gauss(F, X, h, lam, sigma, T):
     
     return Xf
 
-# Defining the SVGD algorithm with the Bounded kernel (so bad performances !)
+# Defining the SVGD algorithm with the Band limited kernel (so bad performances !)
 def SVGD_band(F, X, h, lam, a, T):
     # Initial state
     Xf = X.copy() 
@@ -128,8 +128,8 @@ def SVGD_noise(F, X, h, lam, sigma, T) :
             s = 0
             xi = np.random.normal(loc = 0, scale = 1)
             for j in range(N):
-                s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j], Xf[i], sigma)
-            Xf[i] = Xf[i] -(lam / N) * s +  xi
+                s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j], Xf[i], sigma) +  np.sqrt(2 * lam) * xi
+            Xf[i] = Xf[i] -(lam / N) * s 
 
     return Xf
 
@@ -186,4 +186,31 @@ def SWGD(X, F, T, eps, h, hk):
             den = hk * gauss_kernel(Xf[i], Xf[j], 1)
             Xf[i] = Xf[i] - eps * (gradient(F, Xf[i], h) +  (num / den))
             
+    return Xf
+
+#################################### Mixing Lagevin and SVGD ####################################
+def LASVGD(F, X, T, eps, h, sigma):
+    """
+    input :
+    - F : target potential
+    - X : data
+    - T : total number of  iterations
+    - eps: learning rate
+    - h : for gradient
+    - sigma : gaussian kernel
+
+    """
+    Xf = X.copy()
+    N = len(X)
+    for t in range(T):
+        for i in range(N):
+            s = 0
+            xi = np.random.normal(loc = 0, scale= 1)
+            for j in range(N):
+                s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j],Xf[i],sigma)
+            # Langevin update
+            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(2 * eps) * xi
+
+            # SVGD update
+            Xf[i] = Xf[i] - eps * s / (2 * N)
     return Xf
