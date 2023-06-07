@@ -57,7 +57,7 @@ def SVGD_band(F, X, h, lam, a, T):
     return Xf
 
 # Langevin algorithm
-def LA(F, N, d, h, ht): # ht est dans l'algo de Langevin, et h pour le gradient, N is the number of particles that we want at the end
+def LA(F, N, d, h, ht, T): # ht est dans l'algo de Langevin, et h pour le gradient, N is the number of particles that we want at the end
     """
     input :
     - F : the function in the gradient
@@ -65,11 +65,10 @@ def LA(F, N, d, h, ht): # ht est dans l'algo de Langevin, et h pour le gradient,
     - d : the dimension of samples
     - h : the gradient parameter ($\sim 10^{-6}$)
     - ht : the gradient descent step: learning rate
-    
+    - T: total iterations
     return :
         the samples
     """
-    T = 1000
     # list of realisations of Langevin
     X = np.zeros((N, d)) 
 
@@ -209,7 +208,7 @@ def LASVGD(F, X, T, eps, h, sigma):
             for j in range(N):
                 s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j],Xf[i],sigma)
             # Langevin update
-            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(2 * eps) * xi
+            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(eps) * xi / np.sqrt(2)
 
             # SVGD update
             Xf[i] = Xf[i] - eps * s / (2 * N)
