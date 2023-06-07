@@ -70,7 +70,7 @@ def gauss(x, mean, sigma):
 
 # Gaussian mixture function
 def mix_gauss(x, mean1, mean2, sigma1,sigma2):
-    return (2/3) * gauss(x, mean1, sigma1) + (1/3) * gauss(x, mean2, sigma2)
+    return (2/3) * gauss_1d(x, mean1, sigma1) + (1/3) * gauss_1d(x, mean2, sigma2)
 
 # Generating from a Gaussian mixture
 def gen_gauss_mix(N, mean1, sigma1, mean2, sigma2, p):
@@ -89,5 +89,5 @@ def gen_gauss_mix(N, mean1, sigma1, mean2, sigma2, p):
 
 # A Gaussian mixture target potential
 def tar_mix(x): 
-    return -np.log(mix_gauss(x, 0, 7, 1, np.sqrt(0.2)))
+    return -np.log(mix_gauss(x, 0, 4, 1, 1))
 

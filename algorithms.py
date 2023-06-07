@@ -128,8 +128,8 @@ def SVGD_noise(F, X, h, lam, sigma, T) :
             s = 0
             xi = np.random.normal(loc = 0, scale = 1)
             for j in range(N):
-                s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j], Xf[i], sigma) +  np.sqrt(2 * lam) * xi
-            Xf[i] = Xf[i] -(lam / N) * s 
+                s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j], Xf[i], sigma)
+            Xf[i] = Xf[i] -(lam / N) * s + np.sqrt(2 * lam) * xi
 
     return Xf
 
