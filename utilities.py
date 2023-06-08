@@ -89,5 +89,5 @@ def gen_gauss_mix(N, mean1, sigma1, mean2, sigma2, p):
 
 # A Gaussian mixture target potential
 def tar_mix(x): 
-    return -np.log(mix_gauss(x, 0, 7, 1, 1))
+    return -np.log(mix_gauss(x, 0, 4, 1, 1))
 

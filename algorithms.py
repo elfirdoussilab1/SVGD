@@ -207,9 +207,33 @@ def LASVGD(F, X, T, eps, h, sigma):
             xi = np.random.normal(loc = 0, scale= 1)
             for j in range(N):
                 s += gradient(F, Xf[j], h) * gauss_kernel(Xf[i], Xf[j], sigma) - gr_gauss_kernel(Xf[j],Xf[i],sigma)
-            # Langevin update
-            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(eps) * xi / np.sqrt(2)
+            # Langevin and SVGD updates
+            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(eps) * xi / np.sqrt(2) - eps * s / (2 * N)
 
-            # SVGD update
-            Xf[i] = Xf[i] - eps * s / (2 * N)
+    return Xf
+
+#################################### Mixing Lagevin and stochastic SVGD ####################################
+def stochastic_LASVGD(F, X, T, eps, h, sigma):
+    """
+    input :
+    - F : target potential
+    - X : data
+    - T : total number of  iterations
+    - eps: learning rate
+    - h : for gradient
+    - sigma : gaussian kernel
+
+    """
+    Xf = X.copy()
+    N = len(X)
+    for t in range(T):
+        for i in range(N):
+            s = 0
+            xi = np.random.normal(loc = 0, scale= 1)
+            k = np.random.randint(N)
+            
+            s = gradient(F, Xf[k], h) * gauss_kernel(Xf[i], Xf[k], sigma) - gr_gauss_kernel(Xf[k],Xf[i],sigma)
+            # Langevin and SVGD update
+            Xf[i] = Xf[i] - (eps / 2) * gradient(F, Xf[i], h) + np.sqrt(eps) * xi / np.sqrt(2) - eps * s / 2 
+
     return Xf
