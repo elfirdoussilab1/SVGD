@@ -1,2 +1,2 @@
 # SVGD
-This repository contains all the simulations and results that I have found during my research project at Télécom Paris. More information about the topic can be found here: https://aymane-elfirdoussi.com/projects/
+This repository contains all the simulations and results that I have found during my research project at Télécom Paris when tackling the topic of Stein Variational Gradient Descent. More information about this topic can be found [here](https://aymane-elfirdoussi.com/stein-variational-gradient-descent-convergence-and-new-algorithms/) in my personal website.
